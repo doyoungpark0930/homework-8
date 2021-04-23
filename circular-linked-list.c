@@ -126,7 +126,7 @@ int initialize(listNode** h) {
 int freeList(listNode* h) {
 	listNode* p = h->rlink;
 	listNode* prev;
-	while (p!=h) { //p가 첫노드(의미없는 노드)를 가리키지 않는다면
+	while (p!=h) { //p가 첫노드(값이없는 노드)를 가리키지 않는다면
 		prev = p; //prev은 p가 가리키는 곳을 가리킨다
 		p->llink->rlink = p->rlink;
 		p->rlink->llink = p->llink;
@@ -182,7 +182,18 @@ void printList(listNode* h) {
  * list에 key에 대한 노드하나를 추가
  */
 int insertLast(listNode* h, int key) {
+	if (h != NULL) { //노드가 하나라도 있다면
+		listNode* node = (listNode*)malloc(sizeof(listNode));
+		node->key = key;
+		node->rlink = h;
+		node->llink = h->llink;
+		h->llink->rlink = node;
+		h->llink = node;
 
+	}
+	else { //아무 노드가 없다면
+		printf("There are no Nodes, use it after initializing\n");
+	}
 	return 1;
 }
 
@@ -201,8 +212,19 @@ int deleteLast(listNode* h) {
  * list 처음에 key에 대한 노드하나를 추가
  */
 int insertFirst(listNode* h, int key) {
+	if (h != NULL) { //노드가 하나라도 있다면
+		listNode* node = (listNode*)malloc(sizeof(listNode));
+		node->key = key;
+		node->rlink = h->rlink;
+		node->llink = h;
+		h->rlink->llink = node;
+		h->rlink = node;
 
 
+	}
+	else { //아무 노드가 없다면
+		printf("There are no Nodes, use it after initializing\n");
+	}
 	return 1;
 }
 
@@ -232,7 +254,33 @@ int invertList(listNode* h) {
  *  리스트를 검색하여, 입력받은 key보다 큰값이 나오는 노드 바로 앞에 삽입
  **/
 int insertNode(listNode* h, int key) {
+	if (h != NULL) { //노드가 하나라도 있다면
+		listNode* node = (listNode*)malloc(sizeof(listNode));
+		node->key = key;
+		listNode* p = h->rlink;
+			while (p!=h&&node->key >= p->key) { 
+				p = p->rlink;
 
+				
+			}
+			if (p == h) { //p가 첫 노드를 가리킬 때는 입력받은 key값이 모든 노드의 값보다 가장 크다는 뜻이므로 노드끝에삽입
+				node->rlink = h;
+				node->llink = h->llink;
+				h->llink->rlink = node;
+				h->llink = node;
+			}
+			else {//node의값이 p의 값보다 작을때 
+				node->rlink = p;
+				node->llink = p->llink;
+				p->llink->rlink = node;
+				p->llink = node;
+			}
+		
+
+	}
+	else { //아무 노드가 없다면
+		printf("There are no Nodes, use it after initializing\n");
+	}
 	return 0;
 }
 
