@@ -40,6 +40,7 @@ void printList(listNode* h);
 
 int main()
 {
+	printf("2018038077 Do young park\n");
 	char command;
 	int key;
 	listNode* headnode = NULL;
@@ -192,7 +193,7 @@ int insertLast(listNode* h, int key) {
 
 	}
 	else { //아무 노드가 없다면
-		printf("There are no Nodes, use it after initializing\n");
+		printf("There are no Nodes, try it again after initializing\n");
 	}
 	return 1;
 }
@@ -202,7 +203,16 @@ int insertLast(listNode* h, int key) {
  * list의 마지막 노드 삭제
  */
 int deleteLast(listNode* h) {
-
+	if (h != NULL && h->rlink != h) { 
+		listNode* p = h->llink;
+		p->llink->rlink = h;
+		p->rlink->llink = p->llink;
+		free(p);
+	}
+	else //노드가 아예 없거나 하나만(값이없는 노드만) 있을 경우, 삭제할 노드가 없다고 출력
+	{
+		printf("can't find node to delete.\n");
+	}
 
 	return 1;
 }
@@ -223,7 +233,7 @@ int insertFirst(listNode* h, int key) {
 
 	}
 	else { //아무 노드가 없다면
-		printf("There are no Nodes, use it after initializing\n");
+		printf("There are no Nodes, try it again after initializing\n");
 	}
 	return 1;
 }
@@ -232,7 +242,17 @@ int insertFirst(listNode* h, int key) {
  * list의 첫번째 노드 삭제
  */
 int deleteFirst(listNode* h) {
-
+	if (h != NULL && h->rlink != h) {
+		listNode* p = h->rlink;
+		p->rlink->llink = p->llink;
+		p->llink->rlink = p->rlink;
+		
+		free(p);
+	}
+	else //노드가 아예 없거나 하나만(값이없는 노드만) 있을 경우, 삭제할 노드가 없다고 출력
+	{
+		printf("can't find node to delete.\n");
+	}
 
 	return 1;
 
@@ -243,7 +263,27 @@ int deleteFirst(listNode* h) {
  * 리스트의 링크를 역순으로 재 배치
  */
 int invertList(listNode* h) {
+	listNode* lead = h; //lead포인터는 맨 앞에, 중간은 middle, 뒤에는 trail
+	if (lead != NULL&&lead->rlink!=h) { //값이 있는 노드가 하나 이상 있을때 
+		lead = h->rlink->rlink; //lead가 세번 째 노드를 가리킨다 , 노드가 하나밖에 없을 떄는 자기자신을 가리킴
+		listNode* trail = h; //trail은 첫 노드(값이 없는 노드)를 가리킨다
+		listNode* middle = h->rlink; // middle은 두번째 노드를 가리킨다
 
+
+		while (lead != h->rlink) { //노드가 가리키는 방향을 뒤집음으로써 역순배치
+			middle->rlink = trail;
+			middle->llink = lead;
+			trail = middle;
+			middle = lead;
+			lead = lead->rlink;
+		}
+		middle->rlink = trail; //마지막은 반복문에서 빠져나올때 처리가 안됨으로 여기서 처리
+		middle->llink = lead;
+	}
+	else
+	{
+		printf("can't find nodes to invert.\n");
+	}
 
 	return 0;
 }
@@ -279,7 +319,7 @@ int insertNode(listNode* h, int key) {
 
 	}
 	else { //아무 노드가 없다면
-		printf("There are no Nodes, use it after initializing\n");
+		printf("There are no Nodes, try it again after initializing\n");
 	}
 	return 0;
 }
@@ -289,7 +329,28 @@ int insertNode(listNode* h, int key) {
  * list에서 key에 대한 노드 삭제
  */
 int deleteNode(listNode* h, int key) {
+	if (h != NULL) { //노드가 하나라도 있다면
+		listNode* node = (listNode*)malloc(sizeof(listNode));
+		node->key = key;
+		listNode* p = h->rlink;
+		while (p != h && node->key != p->key) {
+			p = p->rlink;
+		}
+		if (p == h) { //일치하는 값이 없을 때
+			printf("can't find same value.\n");
+			
+		}
+		else {//p의 key와 node의 key가 같을 때
+			p->llink->rlink = p->rlink;
+			p->rlink->llink = p->llink;
+			free(p);
+		}
+
+
+	}
+	else { //아무 노드가 없다면
+		printf("There are no Nodes, try it again after initializing\n");
+	}
 
 	return 0;
 }
-
